@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <style>
+      .container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+
+}
+
+.item {
+  padding: 20px;
+  height: 400px;
+  border: 1px solid black;
+  margin: 2px;
+  background: grey;
+}
+    </style>
+    <script>
+document.addEventListener("DOMContentLoaded", function() { 
+        let draggedElem;
+        var stop = true;
+
+const parent = document.querySelector(".container");
+
+parent.addEventListener("drag", (dragEvent) => {
+  stop = true;
+
+  draggedElem = dragEvent.target.closest(".container > [draggable]");
+  if (dragEvent.clientY < 150) {
+            stop = false;
+            scroll(-1)
+        }
+
+        if (dragEvent.clientY > (window.height - 150)) {
+            stop = false;
+            scroll(1)
+        }
+});
+parent.addEventListener("dragover", (event) => {
+  event.dataTransfer.dropEffect = 'move';
+  event.preventDefault();
+});
+parent.addEventListener("drop", (dropEvent) => {
+  dropEvent.preventDefault();
+  const target = dropEvent.target.closest(".container > [draggable]");
+  const temp = new Text("");
+  target.before(temp);
+  draggedElem.replaceWith(target);
+  temp.replaceWith(draggedElem);
+});
+
+// parent.addEventListener('dragleave', function (e) {
+//   var scrollY = parent.scrollTop;
+//   draggedElem.scroll({ top: scrollY+20, behavior: 'smooth' });
+// });
+
+var scroll = function (step) {
+        var scrollY = window.scrollTop;
+        window.scrollTop=scrollY + step;
+        if (!stop) {
+            setTimeout(function () { scroll(step) }, 20);
+        }
+    }
+
+});
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="item" id="1" draggable="true">1</div>
+      <div class="item" id="2" draggable="true">2</div>
+      <div class="item" id="3" draggable="true">3</div>
+      <div class="item" id="4" draggable="true">4</div>
+      <div class="item" id="5" draggable="true">5</div>
+    </div>
+  </body>
+</html>
